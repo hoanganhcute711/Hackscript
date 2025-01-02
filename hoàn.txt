@@ -1,0 +1,34 @@
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local workspace = game:GetService("Workspace")
+local enemyFolder = workspace:WaitForChild("Enemies")
+
+local function attackClosestEnemy()
+    local closestEnemy = nil
+    local shortestDistance = math.huge
+ 
+ 
+    for _, enemy in pairs(enemyFolder:GetChildren()) do
+        if enemy:FindFirstChild("HumanoidRootPart") and enemy:FindFirstChild("Humanoid") then
+            local distance = (character.HumanoidRootPart.Position - enemy.HumanoidRootPart.Position).Magnitude
+            if distance < shortestDistance then
+                closestEnemy = enemy
+                shortestDistance = distance
+            end
+        end
+    end
+
+
+    if closestEnemy then
+        -- Di chuyển đến quái vật và tấn công
+        character.HumanoidRootPart.CFrame = closestEnemy.HumanoidRootPart.CFrame
+        -- game:GetService("ReplicatedStorage").RemoteEvents.Attack:FireServer()
+    end
+end
+
+
+while true do
+    wait(1) 
+    attackClosestEnemy()
+end
